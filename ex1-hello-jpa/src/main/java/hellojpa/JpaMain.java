@@ -4,7 +4,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
-import java.util.List;
 
 public class JpaMain {
 
@@ -39,14 +38,30 @@ public class JpaMain {
             //JPQL 사용
             //JPQL은 테이블을 대상으로 절대 짜지 않는다! 객체를 기준으로 짤 것
             //JPQL은 객체 지향 쿼리이므로 일단 짜두면 SQL 방언에 맞춰서 알아서 바꿔준다 (oracle, mysql ..)
-            List<Member> result = em.createQuery("select m from Member as m", Member.class)
-                    .setFirstResult(1)
-                    .setMaxResults(10)
-                    .getResultList();
+//            List<Member> result = em.createQuery("select m from Member as m", Member.class)
+//                    .setFirstResult(1)
+//                    .setMaxResults(10)
+//                    .getResultList();
+//
+//            for (Member member : result){
+//                System.out.println("member.name = " + member.getName());
+//            }
 
-            for (Member member : result){
-                System.out.println("member.name = " + member.getName());
-            }
+            //DB SEQ = 1  |     1 => 초기 저장
+            //DB SEQ = 51 | MEM 2 => 그 다음에 어플리케이션 올림
+            //DB SEQ = 51 | MEM 3 => 메모리에서 미리 땡겨온 값 가져다 씀
+            //MEM이 50까지 다 차서 51을 넘지 않으면 next call일어나지 않음
+
+            Member member1 = new Member();
+            member1.setUsername("A");
+            Member member2 = new Member();
+            member1.setUsername("B");
+            Member member3 = new Member();
+            member1.setUsername("C");
+
+            em.persist(member1);
+            em.persist(member2);
+            em.persist(member3);
 
             //할 거 다 하면 트랜잭션 커밋
             tx.commit();
