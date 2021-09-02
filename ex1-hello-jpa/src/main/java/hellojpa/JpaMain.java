@@ -4,6 +4,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+import java.util.List;
 
 public class JpaMain {
 
@@ -20,6 +21,20 @@ public class JpaMain {
         //트랜잭션 시작
 
         try{
+
+            Member member = new Member();
+            member.setUsername("member1");
+            em.persist(member);
+
+            Team team = new Team();
+            team.setName("TeamA");
+            team.getMemberList().add(member);
+            em.persist(team);
+
+
+            em.flush(); //DB에 일단 저장
+            em.clear(); //영속성 컨텍스트 비움
+
 
 //            //멤버 추가
 //            Member member = new Member();
@@ -51,17 +66,17 @@ public class JpaMain {
             //DB SEQ = 51 | MEM 2 => 그 다음에 어플리케이션 올림
             //DB SEQ = 51 | MEM 3 => 메모리에서 미리 땡겨온 값 가져다 씀
             //MEM이 50까지 다 차서 51을 넘지 않으면 next call일어나지 않음
-
-            Member member1 = new Member();
-            member1.setUsername("A");
-            Member member2 = new Member();
-            member1.setUsername("B");
-            Member member3 = new Member();
-            member1.setUsername("C");
-
-            em.persist(member1);
-            em.persist(member2);
-            em.persist(member3);
+//
+//            Member member1 = new Member();
+//            member1.setUsername("A");
+//            Member member2 = new Member();
+//            member1.setUsername("B");
+//            Member member3 = new Member();
+//            member1.setUsername("C");
+//
+//            em.persist(member1);
+//            em.persist(member2);
+//            em.persist(member3);
 
             //할 거 다 하면 트랜잭션 커밋
             tx.commit();
